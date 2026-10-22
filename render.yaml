@@ -1,0 +1,41 @@
+# Render Blueprint for Sastha Infinite ERP.
+# Review pricing and service plans in Render before deploying; this file does not purchase services.
+services:
+  - type: web
+    name: sastha-infinite-erp-api
+    runtime: node
+    rootDir: .
+    plan: starter
+    region: singapore
+    buildCommand: npm install --include=dev && npm run build:api
+    preDeployCommand: npm run db:setup
+    startCommand: npm run start --workspace=api
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sastha-infinite-erp-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: WEB_ORIGIN
+        value: https://sastha-infinite-erp.onrender.com
+
+  - type: web
+    name: sastha-infinite-erp
+    runtime: static
+    rootDir: web
+    buildCommand: npm install --include=dev && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://sastha-infinite-erp-api.onrender.com
+
+databases:
+  - name: sastha-infinite-erp-db
+    databaseName: sastha_erp
+    user: sastha_app
+    plan: basic-256mb
+    region: singapore

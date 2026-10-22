@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sastha_erp
+      POSTGRES_USER: sastha_app
+      POSTGRES_PASSWORD: local_dev_change_me
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - sastha_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sastha_app -d sastha_erp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sastha_pgdata:

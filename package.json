@@ -1,0 +1,24 @@
+{
+  "name": "sastha-infinite-erp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sastha Infinite ERP cloud-ready workspace",
+  "workspaces": [
+    "api",
+    "web"
+  ],
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspace=web",
+    "dev:api": "npm run dev --workspace=api",
+    "build": "npm run prisma:generate && npm run build --workspace=api && npm run build --workspace=web",
+    "build:api": "npm run prisma:generate && npm run build --workspace=api",
+    "start": "npm run build:api && npm run start --workspace=api",
+    "prisma:generate": "npm run prisma:generate --workspace=api",
+    "db:setup": "npm run db:setup --workspace=api",
+    "seed:plans": "npm run seed:plans --workspace=api",
+    "verify": "node scripts/verify-local.cjs"
+  }
+}
